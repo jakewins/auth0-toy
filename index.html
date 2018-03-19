@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Auth0 Lock Sample</title>
+    <script src="https://cdn.auth0.com/js/lock/11.4.0/lock.min.js"></script>
+  </head>
+  <body>
+    <button id="btn-login">Login</button>
+    <p>Nickname: <span id="nick">..</span></p>
+    <script>
+      var lock = new Auth0Lock(
+        't2yj0ybIb4B9UnIHiw5a1sT06su3QEQA',
+        'jakewins.auth0.com'
+      );
+
+      lock.on("authenticated", function(authResult) {
+        // Use the token in authResult to getUserInfo() and save it to localStorage
+        lock.getUserInfo(authResult.accessToken, function(error, profile) {
+          if (error) {
+            // Handle error
+            return;
+          }
+
+          document.getElementById('nick').textContent = profile.nickname;
+
+          localStorage.setItem('accessToken', authResult.accessToken);
+          localStorage.setItem('profile', JSON.stringify(profile));
+        });
+      });
+
+      document.getElementById('btn-login').addEventListener('click', function() {
+        lock.show();
+      });
+    </script>
+  </body>
+</html>
